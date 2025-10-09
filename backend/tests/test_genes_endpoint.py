@@ -2,16 +2,17 @@ import sys
 import types
 import pandas as pd
 from fastapi.testclient import TestClient
+from gene_model import GenesResponse
 
-# create a minimal fake gene_model module so `from gene_model import Gene` succeeds
+# create a minimal fake gene_model module so `from gene_model import GenesResponse` succeeds
 fake_mod = types.ModuleType("gene_model")
-fake_mod.Gene = object
+fake_mod.GenesResponse = GenesResponse
+fake_mod.Gene = dict
 sys.modules["gene_model"] = fake_mod
 
 import main  # now safe to import
 
 def test_get_genes_page_1_size_2():
-    # prepare test DataFrame matching expected JSON keys/types
     rows = [
         {
             "ensembl": "ENSG00000250577",
@@ -32,13 +33,17 @@ def test_get_genes_page_1_size_2():
             "seqRegionEnd": 41730135
         }
     ]
-    df = pd.DataFrame(rows)
-    # inject into the main module so the endpoint will use our data
-    main.GENES = df
+    # df = pd.DataFrame(rows)
 
     client = TestClient(main.app)
     resp = client.get("/genes", params={"page": 1, "page_size": 2})
     assert resp.status_code == 200
 
-    expected = rows
+    expected = {
+        "items": rows,
+        "total": 57992,
+        "page": 1,
+        "page_size": 2,
+        "pages": 28996
+    }
     assert resp.json() == expected
