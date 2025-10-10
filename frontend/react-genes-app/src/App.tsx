@@ -1,13 +1,20 @@
 import './App.scss';
-import Table from './Table';
+import MasterDetailLayout from './layouts/MasterDetailLayout';
+import { createTheme, MantineProvider } from '@mantine/core';
+
+const theme = createTheme({
+  /** Put your mantine theme override here */
+});
 
 const App = () => {
   return (
-    <div className="content">
-      <h1>Rsbuild with React</h1>
-      <p>Start building amazing things with Rsbuild.</p>
-      <Table />
-    </div>
+    <MantineProvider theme={theme}>
+      <div className="content">
+        <h1>Human genes</h1>
+        {/* <p>Start building amazing things with Rsbuild.</p> */}
+        <MasterDetailLayout />
+      </div>
+    </MantineProvider>
   );
 };
 
