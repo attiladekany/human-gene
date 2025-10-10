@@ -1,0 +1,9 @@
+{
+    "folders": [
+        { "path": "backend" },
+        { "path": "frontend/react-genes-app" }
+    ],
+    "settings": {
+        // ...shared workspace settings (optional)...
+    }
+}
