@@ -10,7 +10,7 @@ const App = () => {
   return (
     <MantineProvider theme={theme}>
       <div className="content">
-        <h1>Human genes</h1>
+        <h1 className="header">Human genes</h1>
         {/* <p>Start building amazing things with Rsbuild.</p> */}
         <MasterDetailLayout />
       </div>
