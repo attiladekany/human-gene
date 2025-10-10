@@ -3,12 +3,28 @@ import pandas as pd
 from gene_model import GenesResponse
 import os
 import math
+from fastapi.middleware.cors import CORSMiddleware
 
 FILE_NAME = "genes_human.csv"
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 csv_path = os.path.join(BASE_DIR, FILE_NAME)
 
-app = FastAPI()
+app = FastAPI(root_path="/api")
+
+# --- CORS CONFIG ---
+origins = [
+    "http://localhost:3000",   # React dev server
+    "https://human-gene.onrender.com",  # your deployed frontend (replace with actual domain)
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,        # List of allowed origins
+    allow_credentials=True,
+    allow_methods=["*"],          # Allow all HTTP methods
+    allow_headers=["*"],          # Allow all headers
+)
+# --------------------
 
 def load_genes():
     df = pd.read_csv(csv_path, sep=";")
