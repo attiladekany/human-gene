@@ -39,7 +39,7 @@ const Table = () => {
 
       const url = new URL(API_URL);
       url.searchParams.set(
-        'start',
+        'page',
         `${pagination.pageIndex * pagination.pageSize}`
       );
       url.searchParams.set('page_size', `${pagination.pageSize}`);
@@ -67,7 +67,7 @@ const Table = () => {
 
   const table = useMantineReactTable({
     columns,
-    data,
+    data: data || [],
     enableRowSelection: false,
     getRowId: (row) => row.ensembl,
     initialState: { showColumnFilters: false },

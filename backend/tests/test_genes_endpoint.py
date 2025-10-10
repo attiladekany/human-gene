@@ -12,7 +12,7 @@ sys.modules["gene_model"] = fake_mod
 
 import main  # now safe to import
 
-def test_get_genes_page_1_size_2():
+def test_get_genes_page_0_size_2():
     rows = [
         {
             "ensembl": "ENSG00000250577",
@@ -36,13 +36,13 @@ def test_get_genes_page_1_size_2():
     # df = pd.DataFrame(rows)
 
     client = TestClient(main.app)
-    resp = client.get("/genes", params={"page": 1, "page_size": 2})
+    resp = client.get("/genes", params={"page": 0, "page_size": 2})
     assert resp.status_code == 200
 
     expected = {
         "items": rows,
         "total": 57992,
-        "page": 1,
+        "page": 0,
         "page_size": 2,
         "pages": 28996
     }

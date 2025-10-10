@@ -44,7 +44,7 @@ GENES = load_genes()
 
 @app.get("/genes")
 def get_genes(
-    page: int = Query(1, ge=1),
+    page: int = Query(0, ge=0),
     page_size: int = Query(10, ge=1, le=100),
 ) -> GenesResponse:
     df = GENES
@@ -52,7 +52,7 @@ def get_genes(
     total = int(df.shape[0])
     pages = math.ceil(total / page_size) if total > 0 else 1
 
-    start = (page - 1) * page_size
+    start = page * page_size
     end = start + page_size
     paged_df = df.iloc[start:end]
     
