@@ -14,7 +14,7 @@ app = FastAPI(root_path="/api")
 # --- CORS CONFIG ---
 origins = [
     "http://localhost:3000",   # React dev server
-    "https://human-gene.onrender.com",  # your deployed frontend (replace with actual domain)
+    "https://human-gene.vercel.app",  # your deployed frontend (replace with actual domain)
 ]
 
 app.add_middleware(
