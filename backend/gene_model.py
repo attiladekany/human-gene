@@ -15,6 +15,6 @@ class Gene(BaseModel):
 class GenesResponse(BaseModel):
     items: List[Gene]
     total: int
-    page: int
+    page_index: int
     page_size: int
     pages: int
