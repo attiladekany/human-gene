@@ -1,18 +1,14 @@
+import math
 import sys
 import types
 import pandas as pd
 from fastapi.testclient import TestClient
-from gene_model import GenesResponse
+from models.gene_model import GenesResponse
 
-# create a minimal fake gene_model module so `from gene_model import GenesResponse` succeeds
-fake_mod = types.ModuleType("gene_model")
-fake_mod.GenesResponse = GenesResponse
-fake_mod.Gene = dict
-sys.modules["gene_model"] = fake_mod
-
-import main  # now safe to import
+import main  # app under test
 
 def test_get_genes_page_0_size_2():
+    # expected first two records
     rows = [
         {
             "ensembl": "ENSG00000250577",
@@ -33,17 +29,45 @@ def test_get_genes_page_0_size_2():
             "seqRegionEnd": 41730135
         }
     ]
-    # df = pd.DataFrame(rows)
 
     client = TestClient(main.app)
-    resp = client.get("/genes", params={"page": 0, "page_size": 2})
+    resp = client.get("/genes", params={"page_index": 0, "page_size": 2})
     assert resp.status_code == 200
 
+    data = resp.json()
+    # expected top-level keys from GenesResponse
+    assert set(data.keys()) == {"items", "total", "page_index", "page_size", "pages"}
+
+    assert isinstance(data["items"], list)
+    assert len(data["items"]) == 2
+
+    # assert the first two returned records match expected rows
+    assert data["items"][0] == rows[0]
+    assert data["items"][1] == rows[1]
+
+    assert data["page_index"] == 0
+    assert data["page_size"] == 2
+
+    total = data["total"]
+    assert isinstance(total, int) and total >= 0
+
+    expected_pages = math.ceil(total / 2) if total > 0 else 1
+    assert data["pages"] == expected_pages
+
+def test_get_gene_by_ensembl_ENSG00000250577():
     expected = {
-        "items": rows,
-        "total": 57992,
-        "page": 0,
-        "page_size": 2,
-        "pages": 28996
+        "ensembl": "ENSG00000250577",
+        "geneSymbol": None,
+        "name": None,
+        "bioType": "Linc R N A",
+        "chromosome": "4",
+        "seqRegionStart": 138923930,
+        "seqRegionEnd": 138924232
     }
-    assert resp.json() == expected
+
+    client = TestClient(main.app)
+    resp = client.get("/genes/ENSG00000250577")
+    assert resp.status_code == 200
+
+    data = resp.json()
+    assert data == expected

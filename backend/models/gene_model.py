@@ -1,7 +1,5 @@
 from pydantic import BaseModel
-from typing import Optional
-from typing import List
-from pydantic import BaseModel
+from typing import Optional, List
 
 class Gene(BaseModel):
     ensembl: str
