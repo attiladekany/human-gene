@@ -9,10 +9,10 @@ import {
   type MRT_ColumnDef,
   type MRT_PaginationState,
 } from 'mantine-react-table';
-import { API_URL } from '@/constants';
 import { Gene } from '@/models/gene.model';
 import { ApiResponse } from '@/models/api-response.model';
 import { COLUMNS } from './columns';
+import { getApiUrl } from '@/tools/api-url.helper';
 
 const Table = () => {
   //data and fetching state
@@ -27,6 +27,7 @@ const Table = () => {
     pageIndex: 0,
     pageSize: 5,
   });
+  const { pageIndex, pageSize } = pagination;
 
   //if you want to avoid useEffect, look at the React Query Table instead
   useEffect(() => {
@@ -37,12 +38,9 @@ const Table = () => {
         setIsRefetching(true);
       }
 
-      const url = new URL(API_URL);
-      url.searchParams.set(
-        'page',
-        `${pagination.pageIndex * pagination.pageSize}`
-      );
-      url.searchParams.set('page_size', `${pagination.pageSize}`);
+      const url = getApiUrl();
+      url.searchParams.set('page_index', `${pageIndex}`);
+      url.searchParams.set('page_size', `${pageSize}`);
 
       try {
         const response = await fetch(url.href);
@@ -54,17 +52,19 @@ const Table = () => {
         console.error(error);
         return;
       }
+
       setIsError(false);
       setIsLoading(false);
       setIsRefetching(false);
     };
+
     fetchData();
   }, [
-    pagination.pageIndex, //refetch when page index changes
-    pagination.pageSize, //refetch when page size changes
+    pageIndex, //refetch when page index changes
+    pageSize, //refetch when page size changes
   ]);
-  const columns = useMemo<MRT_ColumnDef<Gene>[]>(() => COLUMNS, []);
 
+  const columns = useMemo<MRT_ColumnDef<Gene>[]>(() => COLUMNS, []);
   const table = useMantineReactTable({
     columns,
     data: data || [],
@@ -72,7 +72,7 @@ const Table = () => {
     getRowId: (row) => row.ensembl,
     initialState: { showColumnFilters: false },
     manualFiltering: false,
-    manualPagination: false,
+    manualPagination: true, // make pagination controlled to avoid duplicate triggers
     manualSorting: false,
     rowCount,
     onPaginationChange: setPagination,
