@@ -1,4 +1,3 @@
-// useGeneData.ts
 import { useEffect, useState } from 'react';
 import { useStore } from './query-params.store';
 import { getApiUrl } from '@/tools/api-url.helper';
