@@ -1,3 +1,4 @@
+import { initStore } from './+state/query-params.store';
 import './App.scss';
 import MasterDetailLayout from './layouts/MasterDetailLayout';
 import { createTheme, MantineProvider } from '@mantine/core';
@@ -7,6 +8,8 @@ const theme = createTheme({
 });
 
 const App = () => {
+  initStore();
+
   return (
     <MantineProvider theme={theme}>
       <div className="content">
