@@ -3,6 +3,7 @@ import pandas as pd
 from typing import Optional
 from load_genes import load_genes
 from models.gene_model import GenesResponse, Gene
+from enums.bio_type import BioType, BIO_TYPE_TEXT, LABEL_TO_ENUM
 import math
 
 # load GENES here to avoid circular import with main
@@ -17,6 +18,42 @@ def get_gene_by_ensembl(ensembl: str) -> Optional[dict]:
         return None
     row = matches.iloc[0].where(pd.notnull(matches.iloc[0]), None)
     return row.to_dict()
+
+# moved: biotypes endpoint must be registered before the dynamic "/{ensembl}" route
+@router.get("/biotypes", status_code=status.HTTP_200_OK)
+def get_biotype_counts():
+    """
+    Returns:
+    {
+      "biotypes": [
+        {"bioType": 2, "count": 5200, "label": "Bidirectional Promoter Lnc R N A"},
+        ...
+      ]
+    }
+    Uses exact label matching against LABEL_TO_ENUM.
+    """
+    if "bioType" not in GENES.columns:
+        return {"biotypes": []}
+
+    counts = {}
+    for raw in GENES["bioType"].tolist():
+        if pd.isnull(raw):
+            continue
+        # exact-match the label from the dataframe to the enum
+        bt = LABEL_TO_ENUM.get(raw)
+        if bt is None:
+            continue
+        counts[bt.value] = counts.get(bt.value, 0) + 1
+
+    items = [
+        {
+            "bioType": k,
+            "count": v,
+            "label": BIO_TYPE_TEXT.get(BioType(k), BioType(k).label())
+        }
+        for k, v in sorted(counts.items(), key=lambda x: -x[1])
+    ]
+    return {"biotypes": items}
 
 @router.get("/{ensembl}", response_model=Gene, status_code=status.HTTP_200_OK)
 def get_gene(ensembl: str):

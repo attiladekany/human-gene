@@ -86,6 +86,17 @@ function Detail({}: Props) {
           </Grid.Col>
         </Grid>
       </Card>
+
+      <Divider
+        labelPosition="center"
+        style={{
+          marginTop: '1rem',
+          // remove the line segments
+          ['--divider-color' as any]: 'transparent', // optional variable override
+        }}
+        className="no-line-divider"
+      />
+
       <Card>
         <LinearChart gene={data} />
       </Card>
