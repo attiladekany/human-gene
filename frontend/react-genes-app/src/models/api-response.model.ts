@@ -1,5 +1,6 @@
 import { Gene } from './gene.model';
 
+//Todo: rename
 export type ApiResponse = {
   items: Array<Gene>;
   total: number;

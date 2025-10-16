@@ -1,7 +1,8 @@
 import './MasterDetailLayout.scss';
-import { Flex, Button, Box, Text } from '@mantine/core';
+import { Flex, Button, Box, Text, Card } from '@mantine/core';
 import Detail from '../components/Detail/Detail';
 import Table from '../components/Table/Table';
+import PieChart from '@/components/Plotly/PieChart/PieChart';
 
 export function MasterDetailLayout() {
   return (
@@ -20,6 +21,9 @@ export function MasterDetailLayout() {
         }}
       >
         <Table />
+        <Card>
+          <PieChart />
+        </Card>
       </Box>
 
       {/* Detail section */}

@@ -3,7 +3,6 @@ import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css'; //if using mantine date picker features
 import 'mantine-react-table/styles.css'; //make sure MRT styles were imported in your app root (once)
 import { useEffect, useMemo, useState } from 'react';
-import type { SetStateAction } from 'react';
 import {
   MantineReactTable,
   type MRT_ColumnDef,
@@ -16,6 +15,7 @@ import { getApiUrl } from '@/tools/api-url.helper';
 
 import { useSearchParams } from 'react-router-dom';
 import { ENSEMBL } from '@/tools/constants';
+import { Divider } from '@mantine/core';
 
 const Table = () => {
   const [data, setData] = useState<Gene[]>([]);
@@ -64,37 +64,49 @@ const Table = () => {
   const columns = useMemo<MRT_ColumnDef<Gene>[]>(() => COLUMNS, []);
 
   return (
-    <MantineReactTable
-      columns={columns}
-      data={data || []}
-      // enableRowSelection={false}
-      getRowId={(row) => row.ensembl}
-      initialState={{ showColumnFilters: false, pagination }} // start with URL pagination
-      manualFiltering={false}
-      manualPagination={true} // controlled pagination
-      manualSorting={false}
-      rowCount={rowCount}
-      autoResetPageIndex={false}
-      onPaginationChange={setPagination}
-      state={{
-        isLoading,
-        pagination,
-        showAlertBanner: isError,
-        showProgressBars: isRefetching,
-      }}
-      mantineToolbarAlertBannerProps={
-        isError ? { color: 'red', children: 'Error loading data' } : undefined
-      }
-      mantineTableBodyRowProps={({ row }) => ({
-        onClick: (event) => {
-          setSearchParams({ [ENSEMBL]: row.id });
-          console.info(event, row.id);
-        },
-        style: {
-          cursor: 'pointer',
-        },
-      })}
-    />
+    <>
+      <MantineReactTable
+        columns={columns}
+        data={data || []}
+        // enableRowSelection={false}
+        getRowId={(row) => row.ensembl}
+        initialState={{ showColumnFilters: false, pagination }} // start with URL pagination
+        manualFiltering={false}
+        manualPagination={true} // controlled pagination
+        manualSorting={false}
+        rowCount={rowCount}
+        autoResetPageIndex={false}
+        onPaginationChange={setPagination}
+        state={{
+          isLoading,
+          pagination,
+          showAlertBanner: isError,
+          showProgressBars: isRefetching,
+        }}
+        mantineToolbarAlertBannerProps={
+          isError ? { color: 'red', children: 'Error loading data' } : undefined
+        }
+        mantineTableBodyRowProps={({ row }) => ({
+          onClick: (event) => {
+            setSearchParams({ [ENSEMBL]: row.id });
+            console.info(event, row.id);
+          },
+          style: {
+            cursor: 'pointer',
+          },
+        })}
+      />
+
+      <Divider
+        labelPosition="center"
+        style={{
+          marginTop: '1rem',
+          // remove the line segments
+          ['--divider-color' as any]: 'transparent', // optional variable override
+        }}
+        className="no-line-divider"
+      />
+    </>
   );
 };
 
