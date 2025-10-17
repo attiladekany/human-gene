@@ -44,4 +44,5 @@ export enum BioType {
   UNITARY_PSEUDOGENE = 43,
   UNPROCESSED_PSEUDOGENE = 44,
   VAULT_RNA = 45,
+  OTHERS = -1,
 }
