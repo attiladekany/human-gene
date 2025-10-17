@@ -12,6 +12,7 @@ def test_get_genes_page_0_size_2():
             "name": None,
             "metadata": None,
             "bioType": "Linc R N A",
+            "bioTypeCode": 11,
             "chromosome": "4",
             "seqRegionStart": 138923930,
             "seqRegionEnd": 138924232
@@ -22,6 +23,7 @@ def test_get_genes_page_0_size_2():
             "name": "G protein-coupled receptor 82",
             "metadata": "Source:HGNC Symbol;Acc:HGNC:4533",
             "bioType": "Protein Coding",
+            "bioTypeCode": 22,
             "chromosome": "X",
             "seqRegionStart": 41724155,
             "seqRegionEnd": 41730135
@@ -59,6 +61,7 @@ def test_get_gene_by_ensembl_ENSG00000233276():
         "name": "glutathione peroxidase 1",
         "metadata": "Source:HGNC Symbol;Acc:HGNC:4553",
         "bioType": "Protein Coding",
+        "bioTypeCode": 22,
         "chromosome": "3",
         "seqRegionStart": 49357176,
         "seqRegionEnd": 49358600

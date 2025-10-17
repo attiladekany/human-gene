@@ -59,3 +59,23 @@ export function getBioTypeLabel(
   const num = typeof value === 'number' ? value : Number(value);
   return BioTypeText[num];
 }
+
+export const BioTypeColorMap: Map<BioType, string> = new Map<BioType, string>([
+  [BioType.PROTEIN_CODING, '#1F77B4'], // 34.4%
+  [BioType.PROCESSED_PSEUDOGENE, '#FF7F0E'], // 17.7%
+  [BioType.LINC_RNA, '#2CA02C'], // 13%
+  [BioType.ANTISENSE, '#9467BD'], // 9.53%
+  [BioType.UNPROCESSED_PSEUDOGENE, '#8C564B'], // 4.59%
+  [BioType.MISC_RNA, '#E377C2'], // 3.81%
+  [BioType.SNRNA, '#7F7F7F'], // 3.28%
+  [BioType.MI_RNA, '#BCBD22'], // 2.7%
+]);
+
+// helper to get color for a value (number | string)
+export function getBioTypeColor(value?: number | string | null): string {
+  const fallback = '#D62728'; // 11% OTHERS
+  if (value == null) return fallback;
+  const num = typeof value === 'number' ? value : Number(value);
+  const color = BioTypeColorMap.get(num) ?? BioTypeColorMap.get(num as BioType);
+  return color ?? fallback;
+}

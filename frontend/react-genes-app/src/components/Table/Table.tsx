@@ -16,6 +16,7 @@ import { getApiUrl } from '@/tools/api-url.helper';
 import { useSearchParams } from 'react-router-dom';
 import { ENSEMBL } from '@/tools/constants';
 import { Divider } from '@mantine/core';
+import BioTypeCell from '../custom-cell/BioTypeCell';
 
 const Table = () => {
   const [data, setData] = useState<Gene[]>([]);
@@ -95,6 +96,11 @@ const Table = () => {
   }, []);
 
   const columns = useMemo<MRT_ColumnDef<Gene>[]>(() => COLUMNS, []);
+  columns.forEach((column) => {
+    if (column.accessorKey === 'bioTypeCode') {
+      column.Cell = ({ cell }) => <BioTypeCell cell={cell} />;
+    }
+  });
 
   return (
     <>

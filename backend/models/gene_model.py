@@ -7,6 +7,7 @@ class Gene(BaseModel):
     name: Optional[str]
     metadata: Optional[str]
     bioType: str
+    bioTypeCode: Optional[int]
     chromosome: str
     seqRegionStart: int
     seqRegionEnd: int

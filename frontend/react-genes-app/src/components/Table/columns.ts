@@ -1,4 +1,7 @@
-export const COLUMNS = [
+import { Gene } from '@/models/gene.model';
+import { MRT_ColumnDef } from 'mantine-react-table';
+
+export const COLUMNS: MRT_ColumnDef<Gene>[] = [
   {
     accessorKey: 'ensembl',
     header: 'Ensembl',
@@ -14,8 +17,9 @@ export const COLUMNS = [
     size: 250,
   },
   {
-    accessorKey: 'bioType',
+    accessorKey: 'bioTypeCode',
     header: 'Bio type',
+    size: 250,
   },
   {
     accessorKey: 'chromosome',

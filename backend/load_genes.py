@@ -1,6 +1,8 @@
 import pandas as pd
 import os
 import re
+from typing import Optional
+from enums.bio_type import LABEL_TO_ENUM
 
 FILE_NAME = "genes_human.csv"
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -27,6 +29,12 @@ def _split_name_and_metadata(val):
         return (name_clean, meta)
     return (s, None)
 
+def _label_to_code(label: Optional[str]) -> Optional[int]:
+    if label is None or pd.isnull(label):
+        return None
+    bt = LABEL_TO_ENUM.get(label)
+    return bt.value if bt is not None else None
+
 def load_genes():
     df = pd.read_csv(csv_path, sep=";")
 
@@ -44,5 +52,8 @@ def load_genes():
     name_meta = df["name"].apply(lambda v: pd.Series(_split_name_and_metadata(v), index=["name", "metadata"]))
     df["name"] = name_meta["name"]
     df["metadata"] = name_meta["metadata"]
+
+    # add bioTypeCode column by exact label lookup (LABEL_TO_ENUM)
+    df["bioTypeCode"] = df["bioType"].apply(_label_to_code)
 
     return df
