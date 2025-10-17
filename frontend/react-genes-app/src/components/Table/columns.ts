@@ -5,11 +5,13 @@ export const COLUMNS = [
   },
   {
     accessorKey: 'geneSymbol',
-    header: 'Gene symbol',
+    header: 'Symbol',
+    size: 50,
   },
   {
     accessorKey: 'name',
     header: 'Name',
+    size: 250,
   },
   {
     accessorKey: 'bioType',
@@ -18,13 +20,18 @@ export const COLUMNS = [
   {
     accessorKey: 'chromosome',
     header: 'Chromosome',
+    size: 50,
   },
   {
     accessorKey: 'seqRegionStart',
-    header: 'SeqRegion start',
+    header: 'Seq. Region start',
   },
   {
     accessorKey: 'seqRegionEnd',
-    header: 'SeqRegion end',
+    header: 'Seq. Region end',
+  },
+  {
+    accessorKey: 'metadata',
+    header: 'Metadata',
   },
 ];

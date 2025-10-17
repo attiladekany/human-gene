@@ -5,6 +5,7 @@ class Gene(BaseModel):
     ensembl: str
     geneSymbol: Optional[str]
     name: Optional[str]
+    metadata: Optional[str]
     bioType: str
     chromosome: str
     seqRegionStart: int

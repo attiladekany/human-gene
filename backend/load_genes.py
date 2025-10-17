@@ -1,9 +1,31 @@
 import pandas as pd
 import os
+import re
 
 FILE_NAME = "genes_human.csv"
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 csv_path = os.path.join(BASE_DIR, FILE_NAME)
+
+def _split_name_and_metadata(val):
+    """
+    If val contains trailing bracketed metadata like:
+      "Some name [Source:HGNC Symbol;Acc:HGNC:4533]"
+    return (clean_name_or_None, metadata_or_None)
+    metadata is returned without the surrounding brackets.
+    """
+    if pd.isnull(val):
+        return (None, None)
+    s = str(val).strip()
+    if s == "":
+        return (None, None)
+    m = re.search(r'\[(.*?)\]\s*$', s)
+    if m:
+        meta = m.group(1)
+        name_clean = re.sub(r'\s*\[.*?\]\s*$', '', s).strip()
+        if name_clean == "":
+            name_clean = None
+        return (name_clean, meta)
+    return (s, None)
 
 def load_genes():
     df = pd.read_csv(csv_path, sep=";")
@@ -17,4 +39,10 @@ def load_genes():
         "Seq region start": "seqRegionStart",
         "Seq region end": "seqRegionEnd"
     })
+
+    # split metadata from name into a separate column; safe if name is missing/NaN
+    name_meta = df["name"].apply(lambda v: pd.Series(_split_name_and_metadata(v), index=["name", "metadata"]))
+    df["name"] = name_meta["name"]
+    df["metadata"] = name_meta["metadata"]
+
     return df

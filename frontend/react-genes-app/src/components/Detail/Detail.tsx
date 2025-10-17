@@ -11,6 +11,7 @@ import {
   Alert,
 } from '@mantine/core';
 import LinearChart from '../Plotly/LinearChart/LinearChart';
+import PieChart from '../Plotly/PieChart/PieChart';
 
 type Props = {};
 
@@ -18,7 +19,7 @@ function Detail({}: Props) {
   const cellStyle: React.CSSProperties = {
     border: '1px solid #e0e0e0',
     borderRadius: '6px',
-    padding: '0.5rem',
+    padding: '0.2rem',
   };
 
   const { ensembl, data, loading, error } = useGeneData();
@@ -62,7 +63,7 @@ function Detail({}: Props) {
         <Grid gutter="xs">
           <Grid.Col span={6} style={cellStyle}>
             <Text fw={700}>Ensembl ID:</Text>
-            <Text>{data.ensembl}</Text>
+            <Text size="1">{data.ensembl}</Text>
           </Grid.Col>
 
           <Grid.Col span={6} style={cellStyle}>
@@ -84,6 +85,11 @@ function Detail({}: Props) {
             <Text fw={700}>Region End:</Text>
             <Text>{data.seqRegionEnd.toLocaleString()}</Text>
           </Grid.Col>
+
+          <Grid.Col span={6} style={cellStyle}>
+            <Text fw={700}>Metadata:</Text>
+            <Text>{data.metadata?.toLocaleString()}</Text>
+          </Grid.Col>
         </Grid>
       </Card>
 
@@ -99,6 +105,20 @@ function Detail({}: Props) {
 
       <Card>
         <LinearChart gene={data} />
+      </Card>
+
+      <Divider
+        labelPosition="center"
+        style={{
+          marginTop: '1rem',
+          // remove the line segments
+          ['--divider-color' as any]: 'transparent', // optional variable override
+        }}
+        className="no-line-divider"
+      />
+
+      <Card>
+        <PieChart />
       </Card>
     </>
   );
