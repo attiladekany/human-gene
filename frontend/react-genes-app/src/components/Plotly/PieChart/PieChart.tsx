@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import './PieChart.scss';
+import { useEffect, useState } from 'react';
 import Plot from 'react-plotly.js';
-import { Paper, Text, Loader, Alert, Group } from '@mantine/core';
+import { Text, Loader, Alert, Group } from '@mantine/core';
 import { getApiUrl } from '@/tools/api-url.helper';
 import { BioTypeResponse } from '@/models/api-response.model copy';
 
@@ -53,19 +54,49 @@ const PieChart = () => {
     );
   }
 
-  const labels = items.map((i) => i.label ?? String(i.bioType));
-  const values = items.map((i) => i.count);
+  const total = items.reduce((s, it) => s + (it.count || 0), 0);
+  const MIN_SLICE_PERCENT = 0.02; // slices smaller than 2% will be grouped into "Other"
+  const LABEL_SHOW_PERCENT = 0.03; // only show label text if slice >= 3%
+
+  const sorted = [...items].sort((a, b) => b.count - a.count);
+
+  const major: BiotypeItem[] = [];
+  const minor: BiotypeItem[] = [];
+  for (const item of sorted) {
+    const percent = total > 0 ? item.count / total : 0;
+    if (percent >= MIN_SLICE_PERCENT) major.push(item);
+    else minor.push(item);
+  }
+
+  const aggregatedItems: BiotypeItem[] = [...major];
+  if (minor.length > 0) {
+    const minorSum = minor.reduce((s, it) => s + it.count, 0);
+    aggregatedItems.push({
+      bioType: -1,
+      count: minorSum,
+      label: `Other (${minor.length})`,
+    });
+  }
+
+  const labels = aggregatedItems.map((i) => i.label ?? String(i.bioType));
+  const values = aggregatedItems.map((i) => i.count);
+
+  const texts = aggregatedItems.map((i) =>
+    total > 0 && i.count / total >= LABEL_SHOW_PERCENT ? i.label : ''
+  );
 
   const trace: Plotly.PlotData = {
     type: 'pie',
     labels,
     values,
-    textinfo: 'label+percent',
+    text: texts,
+    textinfo: 'percent',
     hoverinfo: 'all',
   } as Plotly.PlotData;
 
+  // <div className="bg-white shadow-md rounded-xl p-4 w-full max-w-lg">
   return (
-    <div className="bg-white shadow-md rounded-xl p-4 w-full max-w-lg">
+    <div>
       <Text size="sm" fw={600} mb="xs">
         Biotype distribution
       </Text>
@@ -73,7 +104,8 @@ const PieChart = () => {
       <Plot
         data={[trace]}
         layout={{
-          height: 260,
+          height: 350,
+          width: '460',
           margin: { l: 10, r: 10, t: 10, b: 10 },
           showlegend: true,
         }}
