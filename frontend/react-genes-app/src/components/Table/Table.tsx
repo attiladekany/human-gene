@@ -47,6 +47,11 @@ const Table = () => {
         const response = await fetch(url.href);
         const json = (await response.json()) as ApiResponse;
         setData(json.items);
+        if (json.items?.length) {
+          const id = json.items[0].ensembl;
+          setSearchParams({ [ENSEMBL]: id });
+        }
+
         setRowCount(json.total);
       } catch (error) {
         setIsError(true);
@@ -142,7 +147,6 @@ const Table = () => {
           mantineTableBodyRowProps={({ row }) => ({
             onClick: (event) => {
               setSearchParams({ [ENSEMBL]: row.id });
-              console.info(event, row.id);
             },
             style: {
               cursor: 'pointer',
