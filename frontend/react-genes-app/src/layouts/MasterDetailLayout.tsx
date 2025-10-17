@@ -13,12 +13,7 @@ export function MasterDetailLayout() {
       h="100vh"
     >
       {/* Master section */}
-      <Box
-        flex={0.65}
-        style={{
-          borderRight: '1px solid #8e9196',
-        }}
-      >
+      <Box flex={0.65}>
         <Table />
       </Box>
 
