@@ -1,3 +1,6 @@
 fastapi
 uvicorn[standard]
 pandas
+# added for tests / TestClient runtime
+httpx
+pytest
