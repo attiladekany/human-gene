@@ -28,7 +28,8 @@ jobs:
             - name: Install dependencies
               run: |
                   python -m pip install --upgrade pip
-                  if [ -f backend/requirements.txt ]; then pip install -r backend/requirements.txt; fi
+                  # use python -m pip so it uses the same interpreter set up by actions/setup-python
+                  if [ -f backend/requirements.txt ]; then python -m pip install -r backend/requirements.txt; fi
 
             - name: Run backend tests
               env:
