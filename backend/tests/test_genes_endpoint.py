@@ -13,7 +13,7 @@ def test_get_genes_page_0_size_2():
             "metadata": None,
             "bioType": "Linc R N A",
             "bioTypeCode": 11,
-            "chromosome": "4",
+            "chromosome": "0",
             "seqRegionStart": 138923930,
             "seqRegionEnd": 138924232
         },
